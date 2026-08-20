@@ -1,0 +1,1971 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tiny English Tree · 0~3歲英文啟蒙儀表板</title>
+<meta name="theme-color" content="#4a63c9">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Tiny English Tree">
+<style>
+  :root{
+    --ink:#2b2420; --sub:#6b6259; --paper:#fffaf3; --card:#ffffff; --line:#ece3d6;
+    --brand:#4a63c9; --brand-light:#d9e2fb;
+    --c1:#ffd9c7; --c1d:#c9542a;
+    --c2:#cfe8dd; --c2d:#237a58;
+    --c3:#ffe6a8; --c3d:#a86e0e;
+    --safe-b: env(safe-area-inset-bottom, 0px);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC","Microsoft JhengHei",Arial,sans-serif;
+    padding-bottom:calc(72px + var(--safe-b));
+  }
+  a{color:var(--brand);}
+  header.top{
+    position:sticky; top:0; z-index:20; background:rgba(255,250,243,.92); backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line); padding:14px 18px;
+  }
+  header.top .brand{display:flex; align-items:center; gap:10px; max-width:960px; margin:0 auto;}
+  header.top .logo{
+    width:34px;height:34px;border-radius:10px;background:var(--brand);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex:0 0 auto;
+  }
+  header.top h1{font-size:16px; margin:0; line-height:1.3;}
+  header.top .en{font-size:11px;color:var(--sub);}
+
+  nav.desktop-nav{display:none;}
+  main{max-width:960px;margin:0 auto;padding:18px 16px 30px;}
+
+  .hero{
+    background:linear-gradient(135deg,var(--brand-light),#fff);
+    border-radius:18px;padding:20px;margin-bottom:18px;border:1px solid var(--line);
+  }
+  .hero h2{margin:0 0 8px;font-size:19px;}
+  .hero p{margin:0;color:var(--sub);font-size:13.5px;line-height:1.75;}
+
+  .notice{
+    background:#fff; border:1px dashed #cbb896; border-radius:14px; padding:14px 16px;
+    font-size:12.5px; color:var(--sub); line-height:1.7; margin-bottom:18px;
+  }
+  .notice b{color:var(--ink);}
+
+  section.age-panel{display:none;}
+  section.age-panel.active{display:block;}
+
+  .stagehead{margin-bottom:14px;}
+  .stagehead h2{font-size:20px;margin:0 0 6px;}
+  .stagehead p{margin:0;color:var(--sub);font-size:13.5px;line-height:1.75;}
+
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:16px;
+    padding:16px 18px 18px; margin-bottom:16px;
+  }
+  .card h3{margin:0 0 4px; font-size:15.5px; display:flex; align-items:center; gap:8px;}
+  .card .card-sub{font-size:12px;color:var(--sub);margin-bottom:12px;}
+
+  details.card{padding:0; overflow:hidden;}
+  details.card summary{
+    list-style:none; cursor:pointer; padding:14px 18px; display:flex; align-items:center; gap:10px;
+    -webkit-tap-highlight-color:transparent;
+  }
+  details.card summary::-webkit-details-marker{display:none;}
+  details.card summary::marker{content:"";}
+  details.card summary .s-title{flex:1 1 auto; min-width:0; font-weight:700; font-size:15px; display:flex; align-items:baseline; gap:6px; flex-wrap:wrap;}
+  details.card summary .s-title .sub-inline{font-weight:400; font-size:11.5px; color:var(--sub);}
+  details.card summary .chev{flex:0 0 auto; color:var(--sub); font-size:12px; transition:transform .2s;}
+  details.card[open] summary .chev{transform:rotate(180deg);}
+  details.card .level-body{padding:0 18px 18px;}
+  details.card .level-body .card-head-row{justify-content:flex-end; margin-bottom:10px;}
+  .badge{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:26px;height:26px;border-radius:50%;font-size:13px;flex:0 0 auto;
+    background:var(--c1); color:var(--c1d);
+  }
+
+  .phrase-list{list-style:none;margin:0;padding:0;}
+  .phrase-list li{padding:9px 0;border-top:1px dashed var(--line); display:flex; align-items:flex-start; justify-content:space-between; gap:10px;}
+  .phrase-list li:first-child{border-top:none;padding-top:0;}
+  .phrase-list .txt{flex:1 1 auto; min-width:0;}
+  .phrase-list .en{font-weight:600;font-size:15px;color:var(--brand);}
+  .phrase-list .zh{font-size:12px;color:var(--sub);margin-top:2px;}
+
+  .speak-btn{
+    flex:0 0 auto; width:30px;height:30px;border-radius:50%; border:1px solid var(--brand-light);
+    background:var(--brand-light); color:var(--brand); font-size:14px; cursor:pointer;
+    display:flex;align-items:center;justify-content:center; margin-top:1px;
+  }
+  .speak-btn:active{transform:scale(0.92);}
+  .speak-btn.playing{background:var(--brand); color:#fff;}
+  .speak-btn[disabled]{opacity:.4; cursor:not-allowed;}
+  .speak-btn.small{width:24px;height:24px;font-size:11.5px;}
+  .speak-btn.has-rec{background:var(--c2);border-color:var(--c2);color:var(--c2d);}
+
+  .rec-btn{
+    flex:0 0 auto; width:30px;height:30px;border-radius:50%; border:1px solid #e8b4b4;
+    background:#fdf0f0; color:#c9542a; font-size:13px; cursor:pointer;
+    display:none; align-items:center;justify-content:center; margin-top:1px;
+  }
+  body.rec-mode .rec-btn{display:flex;}
+  .rec-btn.recording{background:#c9542a; color:#fff; animation:recPulse 1s infinite;}
+  @keyframes recPulse{0%,100%{opacity:1;}50%{opacity:.55;}}
+  .rec-badge{
+    font-size:10px; color:var(--c2d); background:var(--c2); border-radius:999px;
+    padding:1px 6px; margin-left:4px; white-space:nowrap; flex:0 0 auto;
+  }
+  .recorder-panel{
+    width:100%; background:#fbf6ec; border-radius:12px; padding:10px 12px; margin-top:6px;
+    display:flex; flex-wrap:wrap; align-items:center; gap:8px; font-size:12.5px;
+  }
+  .recorder-panel .rp-status{flex:1 1 140px; color:var(--sub);}
+  .recorder-panel audio{flex:1 1 180px; min-width:150px; height:32px;}
+
+  .card-head-row{display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:4px; flex-wrap:wrap;}
+  .card-head-row h3{flex:1 1 auto; min-width:0; margin-bottom:0;}
+  .playall-btn{
+    flex:0 0 auto; border:1px solid var(--brand); color:var(--brand); background:#fff;
+    border-radius:999px; padding:5px 12px; font-size:11.5px; cursor:pointer; white-space:nowrap;
+  }
+  .playall-btn.playing{background:var(--brand); color:#fff;}
+  .playall-btn[disabled]{opacity:.4; cursor:not-allowed;}
+
+  .story-block{
+    background:#fbf6ec;border-radius:12px;padding:14px 16px;margin-top:6px;
+    font-size:14.5px; line-height:2; color:var(--ink);
+  }
+  .story-line{display:flex; align-items:center; gap:8px;}
+  .story-block .zh-note{font-size:12px;color:var(--sub);margin-top:8px;line-height:1.8;}
+
+  .audio-settings{background:#fff;}
+  .audio-row{display:flex; align-items:center; gap:10px; margin-bottom:12px; flex-wrap:wrap;}
+  .audio-row label{font-size:12.5px; color:var(--sub); flex:0 0 auto; width:74px;}
+  .audio-row select{flex:1 1 180px; min-width:150px; padding:7px 8px; border-radius:8px; border:1px solid var(--line); font-size:13px; background:#fff; color:var(--ink);}
+  .audio-row input[type=range]{flex:1 1 140px; accent-color:var(--brand);}
+  .audio-row .rate-val{font-size:12px; color:var(--brand); font-weight:600; width:40px; text-align:right;}
+  .audio-hint{font-size:11.5px; color:var(--sub); line-height:1.7;}
+  .audio-hint.warn{color:#b8323a;}
+  .test-speak-btn{
+    margin-top:2px; border:1px solid var(--brand); background:var(--brand); color:#fff;
+    border-radius:999px; padding:7px 16px; font-size:12.5px; cursor:pointer;
+  }
+  .test-speak-btn[disabled]{opacity:.5; cursor:not-allowed;}
+
+  .link-list{list-style:none;margin:0;padding:0;}
+  .link-list li{padding:10px 0;border-top:1px dashed var(--line);}
+  .link-list li:first-child{border-top:none;padding-top:0;}
+  .link-list a{font-weight:600;font-size:14px;text-decoration:none;}
+  .link-list a:hover{text-decoration:underline;}
+  .link-list .desc{font-size:12px;color:var(--sub);margin-top:3px;line-height:1.7;}
+  .ext{font-size:10px;background:var(--brand-light);color:var(--brand);border-radius:6px;padding:1px 6px;margin-left:6px;vertical-align:middle;}
+
+  .week-box{
+    display:flex;align-items:flex-start;gap:12px;background:var(--c2);border-radius:12px;padding:14px 16px;
+  }
+  .week-box .num{
+    background:#fff;color:var(--c2d);font-weight:700;border-radius:8px;padding:4px 9px;font-size:12px;flex:0 0 auto;
+  }
+  .week-box .txt{font-size:13.5px;line-height:1.8;color:#1f4a37;}
+  .week-box .txt b{display:block;color:var(--c2d);margin-bottom:2px;font-size:14.5px;}
+
+  .checklist{list-style:none;margin:0;padding:0;}
+  .checklist li{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-top:1px dashed var(--line);}
+  .checklist li:first-child{border-top:none;padding-top:0;}
+  .checklist input{margin-top:3px;width:17px;height:17px;flex:0 0 auto;accent-color:var(--brand);}
+  .checklist label{font-size:13.5px;line-height:1.6;}
+  .checklist .done label{color:var(--sub);text-decoration:line-through;}
+  .progress-bar{height:8px;border-radius:6px;background:var(--line);overflow:hidden;margin:10px 0 4px;}
+  .progress-bar > div{height:100%;background:var(--brand);width:0%;transition:width .3s;}
+  .progress-text{font-size:11.5px;color:var(--sub);}
+
+  .resource-tag{
+    display:inline-block;font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:20px;margin-bottom:8px;
+  }
+  .tag-bbc{background:#ffe0e0;color:#b8323a;}
+  .tag-oxford{background:#dbe6ff;color:#2b4fa8;}
+  .tag-original{background:var(--c3);color:var(--c3d);}
+  .tag-guide{background:var(--c4);color:var(--c4d);}
+  .age-tag{display:inline-block;font-size:10.5px;font-weight:600;padding:2px 9px;border-radius:20px;background:var(--brand-light);color:var(--brand);}
+
+  /* Custom vocabulary */
+  .custom-card .custom-row{display:flex; gap:8px; margin-bottom:8px;}
+  .custom-card input[type=text]{
+    flex:1 1 auto; min-width:0; padding:9px 10px; border-radius:9px; border:1px solid var(--line);
+    font-size:13.5px; background:#fbf6ec; color:var(--ink);
+  }
+  .mini-btn{
+    flex:0 0 auto; border:1px solid var(--line); background:#fff; color:var(--sub);
+    border-radius:9px; padding:0 12px; font-size:12px; cursor:pointer; white-space:nowrap;
+  }
+  .mini-btn[disabled]{opacity:.5; cursor:not-allowed;}
+  .add-custom-btn{
+    display:block; width:100%; margin-top:2px; border:none; background:var(--brand); color:#fff;
+    border-radius:10px; padding:10px; font-size:13.5px; font-weight:600; cursor:pointer;
+  }
+  .add-custom-btn[disabled]{opacity:.5; cursor:not-allowed;}
+  .custom-status{font-size:11.5px; color:var(--sub); min-height:14px; margin:8px 0 0;}
+  .custom-status.err{color:#b8323a;}
+  .custom-status.ok{color:var(--c2d);}
+  .custom-list{margin-top:10px;}
+  .custom-list li{padding:9px 0;}
+  .del-btn{
+    flex:0 0 auto; width:30px;height:30px;border-radius:50%; border:1px solid #f2d9d9;
+    background:#fff0f0; color:#b8323a; font-size:13px; cursor:pointer;
+    display:flex;align-items:center;justify-content:center; margin-top:1px;
+  }
+  .custom-empty{font-size:12px; color:var(--sub); padding:6px 0;}
+
+  /* Reading-together guidance */
+  .principle-list, .tip-list{list-style:none; margin:0; padding:0;}
+  .principle-list li, .tip-list li{padding:10px 0; border-top:1px dashed var(--line); font-size:13.5px; line-height:1.8;}
+  .principle-list li:first-child, .tip-list li:first-child{border-top:none; padding-top:0;}
+  .principle-list b, .tip-list b{color:var(--brand); display:block; margin-bottom:2px; font-size:14px;}
+  .faq-item{padding:11px 0; border-top:1px dashed var(--line);}
+  .faq-item:first-child{border-top:none; padding-top:0;}
+  .faq-item .q{font-weight:700; font-size:13.5px; color:var(--ink); margin-bottom:5px; line-height:1.6;}
+  .faq-item .q b{color:var(--brand); margin-right:4px;}
+  .faq-item .a{font-size:13px; color:var(--sub); line-height:1.8;}
+  .faq-item .a b{color:var(--c2d); margin-right:4px;}
+  .age-subhead{margin:26px 0 14px;}
+  .age-subhead:first-child{margin-top:0;}
+  .age-subhead h3{font-size:17px; margin:0 0 4px;}
+  .age-subhead p{margin:0; font-size:13px; color:var(--sub); line-height:1.75;}
+  .del-scenario-btn{color:#b8323a; border-color:#f2d9d9;}
+  .custom-card select.target-select{
+    width:100%; padding:9px 10px; border-radius:9px; border:1px solid var(--line);
+    font-size:13.5px; background:#fbf6ec; color:var(--ink);
+  }
+  .new-scenario-row{display:flex;}
+
+  nav.tabbar{
+    position:fixed; left:0; right:0; bottom:0; z-index:30;
+    background:#fff; border-top:1px solid var(--line);
+    padding:8px 6px calc(8px + var(--safe-b));
+    display:flex; justify-content:space-around;
+  }
+  nav.tabbar button{
+    background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:3px;
+    color:var(--sub); font-size:10.5px; padding:4px 6px; border-radius:10px; cursor:pointer;
+  }
+  nav.tabbar button .ic{font-size:18px;}
+  nav.tabbar button.active{color:var(--brand); background:var(--brand-light);}
+
+  @media (min-width:760px){
+    body{padding-bottom:30px;}
+    nav.tabbar{display:none;}
+    nav.desktop-nav{
+      display:flex; gap:6px; max-width:960px; margin:10px auto 0; padding:0 16px;
+    }
+    nav.desktop-nav button{
+      background:#fff;border:1px solid var(--line);padding:9px 16px;border-radius:999px;
+      font-size:13.5px;color:var(--sub);cursor:pointer;
+    }
+    nav.desktop-nav button.active{background:var(--brand);border-color:var(--brand);color:#fff;}
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="brand">
+    <div class="logo">TE</div>
+    <div>
+      <h1>Tiny English Tree</h1>
+      <div class="en">0~3歲 · 分齡英文啟蒙儀表板</div>
+    </div>
+  </div>
+</header>
+
+<nav class="desktop-nav" id="desktopNav"></nav>
+
+<main>
+  <section id="panel-home" class="age-panel">
+    <div class="hero">
+      <h2>怎麼用這個系統</h2>
+      <p>
+        這是給<b>大人</b>使用的英文啟蒙儀表板，不是給寶寶操作的App。核心邏輯：先讓你（大人）看到「這個階段要說什麼、可以搭配什麼資源」，降低你臨場要想英文的負擔，你只要照著念、重複，就能把語感慢慢輸出給孩子。
+        目前依照 0~1歲、1~2歲、2~3歲 三個階段設計，每個階段都有「分級口說教材」「延伸資源連結」「本週活動建議」「進度追蹤」四個區塊。每一句英文旁邊都有 🔊 播放按鈕，可以先聽一次英式發音再自己開口，下面「發音練習設定」可以調整音色跟速度。
+      </p>
+    </div>
+    <div class="notice">
+      <b>關於教材版權的說明：</b>Oxford Reading Tree（牛津閱讀樹）與 BBC 的內容都是有版權的商業教材，本系統<b>沒有複製</b>它們的書籍內文、插圖或影音內容。「分級口說教材」與「小故事」是原創內容，只是參考了 ORT 由淺入深、句型重複可預測的分級邏輯，以及 BBC 兒童內容慢語速、高重複性的設計原則。真正的 ORT 繪本與 BBC 節目，請透過各分頁「延伸資源」裡的官方連結前往官網使用（部分需要免費註冊或訂閱）。
+    </div>
+    <div class="card audio-settings">
+      <h3><span class="badge">🔊</span>發音練習設定</h3>
+      <p class="card-sub">每個英文短句旁邊都有 🔊 按鈕，按下去會用手機/電腦內建的語音朗讀，方便大人先聽一次英式發音再開口練習。這裡的設定會套用到全部分頁。</p>
+      <div class="audio-row">
+        <label for="voiceSelect">發音音色</label>
+        <select id="voiceSelect"></select>
+      </div>
+      <div class="audio-row">
+        <label for="rateRange">播放速度</label>
+        <input type="range" id="rateRange" min="0.6" max="1.1" step="0.05" value="0.85">
+        <span class="rate-val" id="rateVal">0.85x</span>
+      </div>
+      <button class="test-speak-btn" id="testSpeakBtn">🔊 試聽一句：Good morning!</button>
+      <p class="audio-hint" id="audioHint" style="margin-top:10px;"></p>
+    </div>
+    <div class="card">
+      <h3><span class="badge">📲</span>把它加到手機桌面</h3>
+      <p class="card-sub">用手機瀏覽器（Safari / Chrome）打開這個網站後：</p>
+      <ul class="phrase-list">
+        <li><div class="en">iPhone (Safari)</div><div class="zh">點選下方「分享」圖示 → 「加入主畫面」</div></li>
+        <li><div class="en">Android (Chrome)</div><div class="zh">點選右上角「⋮」選單 → 「新增至主畫面」／「安裝應用程式」</div></li>
+      </ul>
+      <p class="card-sub" style="margin-top:10px;">加入後會像 App 一樣有獨立圖示，點開沒有網址列，也能離線瀏覽已載入過的內容。</p>
+    </div>
+    <div class="card">
+      <h3><span class="badge">🎙️</span>家庭錄音</h3>
+      <p class="card-sub">除了系統發音，也可以錄下家人自己的聲音——只要某句話有家人錄過音，🔊 播放時就會優先播放你們的錄音，沒錄過的句子照舊播放系統發音。錄音會存在雲端，全家不管用哪支手機打開網站都聽得到同一份。目前先開放「單詞指認」「情緒 Feelings」兩個情境試用。</p>
+      <div class="audio-row">
+        <label for="recordingModeToggle">錄音模式</label>
+        <input type="checkbox" id="recordingModeToggle">
+      </div>
+      <p class="card-sub" id="recordingModeHint">開啟後，可以試用的情境裡每句話旁邊會多一個 🎙 錄音按鈕。上傳/刪除錄音需要輸入家庭密語。</p>
+      <div class="custom-row" style="margin-top:10px;">
+        <button class="mini-btn" id="downloadBackupBtn">⬇️ 下載錄音備份</button>
+        <button class="mini-btn" id="restoreBackupBtn">⬆️ 還原備份</button>
+        <input type="file" id="restoreBackupFile" accept="application/json" style="display:none;">
+      </div>
+      <p class="custom-status" id="recordingStatus"></p>
+    </div>
+  </section>
+
+  <section id="panel-0-1" class="age-panel"></section>
+  <section id="panel-1-2" class="age-panel"></section>
+  <section id="panel-2-3" class="age-panel"></section>
+
+  <section id="panel-reading" class="age-panel">
+    <div class="stagehead">
+      <h2>📚 親子共讀技巧與引導</h2>
+      <p>共讀的「方法」比「內容」更重要——同一本書，用對方式陪讀，效果差很多。以下依年齡整理了核心原則、實用技巧、可以直接用的英文引導句，以及大人常見的疑問。</p>
+    </div>
+    <div id="readingPanels"></div>
+  </section>
+
+  <section id="panel-esl" class="age-panel">
+    <div class="stagehead">
+      <h2>🏡 在家打造英文環境（不用是母語人士）</h2>
+      <p>家裡沒有外師、大人英文也不完美，一樣可以幫小孩打造有效的英語環境。重點不是「講得多標準」，而是「多常出現、出現得多自然」。以下整理成可以立刻開始做的具體作法。</p>
+    </div>
+    <div id="eslPanel"></div>
+  </section>
+
+  <section id="panel-resources" class="age-panel">
+    <div class="stagehead">
+      <h2>資源總覽</h2>
+      <p>所有分頁引用到的官方資源，整理在這裡方便直接前往。</p>
+    </div>
+    <div class="card">
+      <h3><span class="badge">🔗</span>官方資源連結</h3>
+      <ul class="link-list" id="allResourceLinks"></ul>
+    </div>
+  </section>
+</main>
+
+<nav class="tabbar" id="tabbar"></nav>
+
+<script>
+/* ---------------- Content data ---------------- */
+const TABS = [
+  {id:"home", label:"總覽", icon:"🏠"},
+  {id:"0-1", label:"0~1歲", icon:"👶"},
+  {id:"1-2", label:"1~2歲", icon:"🚶"},
+  {id:"2-3", label:"2~3歲", icon:"📖"},
+  {id:"reading", label:"共讀", icon:"📚"},
+  {id:"esl", label:"英文環境", icon:"🏡"},
+  {id:"resources", label:"資源", icon:"🔗"},
+];
+
+const AGE_DATA = {
+  "0-1": {
+    title: "0~1歲：聲音與重複的階段",
+    intro: "這個階段寶寶對語調、表情、重複的聲音最敏感，還不需要句子，重點是「大量重複的簡單語塊 + 誇張一點的語調」。大人的任務是常常說、慢慢說、開心地說。",
+    levels: [
+      {
+        name: "Level A · 單詞指認 Point &amp; Say",
+        sub: "指著東西、身體部位或動作，說出單詞，重複3次以上",
+        items: [
+          ["head, tummy, toes","身體部位，洗澡換衣服時最好用"],
+          ["mummy, daddy","家庭稱謂"],
+          ["cup, spoon, ball, book","日常物品"],
+          ["up, down, stop, go","動作詞，抱起放下時說"],
+        ]
+      },
+      {
+        name: "Level B · 疊詞短句 Two-word Chunks",
+        sub: "固定的兩三字短句，天天重複同一套",
+        items: [
+          ["All done!","吃完／做完了"],
+          ["More milk?","還要喝奶嗎？"],
+          ["Night night.","晚安要睡了"],
+          ["Up you get!","起來囉"],
+          ["Well done!","做得好！（隨時可以用，鼓勵用語）"],
+        ]
+      },
+      {
+        name: "起床 Wake Up",
+        sub: "生活情境用語：早上起床、準備開始新的一天",
+        icon: "🌞",
+        items: [
+          ["Good morning, sunshine!","早安，我的小太陽！"],
+          ["Did you sleep well?","你睡得好嗎？"],
+          ["Time to wake up!","該起床囉！"],
+          ["Let's get dressed.","我們來穿衣服囉。"],
+        ]
+      },
+      {
+        name: "換尿布 Nappy Time",
+        sub: "生活情境用語：換尿布時的固定台詞，天天講同一套",
+        icon: "🧷",
+        items: [
+          ["Let's change your nappy!","換尿布囉！"],
+          ["Lie down for me.","躺下來喔"],
+          ["All clean now!","乾乾淨淨了！"],
+          ["Up we go!","起來囉！"],
+          ["Wow, your nappy is so full!","哇，你的尿布好滿喔！"],
+          ["Your nappy is getting so puffy!","尿布變得鼓鼓的！（puffy＝腫、鼓起的）"],
+          ["Your nappy is getting saggy.","尿布變得鬆垮垮的。（saggy＝鬆垮垮的）"],
+          ["It's time for a nappy change!","該換尿布了！"],
+          ["Look! The line turned blue. That means your nappy is wet.","你看！線變藍色了，代表尿布濕了。"],
+          ["Let's throw your dirty nappy away!","我們把髒尿布丟掉吧！"],
+          ["All done! Much better!","好了！舒服多了！"],
+        ]
+      },
+      {
+        name: "洗澡 Bath Time",
+        sub: "生活情境用語：洗澡時固定講的短句",
+        icon: "🛁",
+        items: [
+          ["Bath time!","洗澡時間到囉！"],
+          ["Is the water warm?","水溫暖嗎？"],
+          ["Splish splash!","嘩啦嘩啦！"],
+          ["Wash your hands.","洗洗你的手。"],
+          ["All done, let's dry off.","洗好了，擦乾身體"],
+        ]
+      },
+      {
+        name: "吃飯 Meal Time",
+        sub: "生活情境用語：餵食／吃飯時固定講的短句",
+        icon: "🥣",
+        items: [
+          ["Are you hungry?","你餓了嗎？"],
+          ["Let's have breakfast.","我們來吃早餐吧！"],
+          ["Open wide!","嘴巴張大大！"],
+          ["Take a little bite.","咬一小口。"],
+          ["Chew it slowly.","慢慢咀嚼。"],
+          ["Yummy!","好好吃喔！"],
+          ["Do you want some more?","你還要一些嗎？"],
+          ["All gone! More?","吃光光了！還要嗎？"],
+        ]
+      },
+      {
+        name: "刷牙 Brush Teeth",
+        sub: "生活情境用語：刷牙時固定講的短句，適合長第一顆牙後開始使用",
+        icon: "🪥",
+        items: [
+          ["Let's brush your teeth!","我們來刷牙吧！"],
+          ["Open wide!","嘴巴張大大！"],
+          ["Up and down, up and down.","上下刷、上下刷。"],
+          ["All done! Good job!","刷好了！做得好！"],
+        ]
+      },
+      {
+        name: "穿衣出門 Dress &amp; Go",
+        sub: "生活情境用語：穿衣服、出門時固定講的短句",
+        icon: "👕",
+        items: [
+          ["Let's put on your socks.","穿襪子囉"],
+          ["Arms up!","手舉高高！"],
+          ["Let's go outside!","我們出門吧！"],
+          ["Say bye-bye!","說掰掰！"],
+        ]
+      },
+      {
+        name: "睡前 Bedtime",
+        sub: "生活情境用語：睡前固定講的短句，營造睡眠儀式感",
+        icon: "🌙",
+        items: [
+          ["Time for bed.","睡覺時間到了"],
+          ["Are you sleepy?","你想睡了嗎？"],
+          ["Good night, sleep tight.","晚安，好好睡"],
+          ["I love you.","我愛你"],
+        ]
+      },
+      {
+        name: "玩耍 Playtime",
+        sub: "生活情境用語：陪玩、躲貓貓時固定講的短句",
+        icon: "🧸",
+        items: [
+          ["Let's play!","一起玩吧！"],
+          ["Peekaboo!","哇！（躲貓貓）"],
+          ["Where's the ball?","球在哪裡？"],
+          ["Here it is!","在這裡！"],
+          ["What are you doing?","你在做什麼？"],
+          ["It's your turn.","輪到你了。"],
+          ["My turn!","換我了！"],
+        ]
+      },
+      {
+        name: "安撫哭鬧 Soothing",
+        sub: "生活情境用語：寶寶哭鬧時可以搭配輕拍、抱抱的安撫語",
+        icon: "🤱",
+        items: [
+          ["It's okay.","沒事的"],
+          ["Mummy's here.","媽媽在這裡"],
+          ["Shh, shh.","噓～噓～"],
+          ["There, there.","乖，乖"],
+        ]
+      },
+      {
+        name: "情緒 Feelings",
+        sub: "生活情境用語：幫寶寶說出他的感受，是很有用的情緒引導方式",
+        icon: "🙂",
+        items: [
+          ["Are you happy?","你開心嗎？"],
+          ["You're smiling!","你在笑耶！"],
+          ["Are you upset?","你不開心嗎？"],
+          ["It's okay to cry.","哭沒關係。"],
+          ["I know, I know.","我知道，我知道。"],
+        ]
+      },
+      {
+        name: "鼓勵 Encouragement",
+        sub: "生活情境用語：不用等表現完美，願意嘗試就值得鼓勵",
+        icon: "🌟",
+        items: [
+          ["You got it!","做對了！"],
+          ["You found it!","你找到了！"],
+          ["That's right!","對了！答對了！"],
+          ["Great job!","做得好！"],
+          ["Fabulous!","太讚了！"],
+          ["Wonderful!","太棒了！"],
+          ["Amazing!","太厲害了！"],
+          ["Awesome!","超棒的！"],
+          ["You did it!","你做到了！你好棒！"],
+          ["I knew you could do it!","我就知道你做得到！"],
+          ["You made it!","你辦到了！"],
+          ["That's great!","很好！"],
+        ]
+      }
+    ],
+    resources: [
+      {name:"BBC Tiny Happy People", tag:"bbc", url:"https://www.google.com/search?q=BBC+Tiny+Happy+People", desc:"BBC 針對 0~4 歲家長設計的免費語言發展影片與遊戲建議網站（連結為搜尋結果，因 BBC 站內網址常調整，用搜尋較穩定）。"},
+      {name:"CBeebies Bedtime Stories", tag:"bbc", url:"https://www.bbc.co.uk/cbeebies", desc:"BBC 兒童頻道官網，睡前故事單元語速慢、語調豐富，適合當作背景英語聽力輸入。"},
+    ],
+    weekly: [
+      "本週試試：洗澡時固定重複同一組身體部位單字（head, tummy, toes），連續講一整週。",
+      "本週試試：睡前放一首簡單童謠（如 Twinkle Twinkle Little Star），跟著旋律做手部動作。",
+      "本週試試：每次抱起/放下寶寶都說 'Up you get!' / 'Down we go!'，讓動作和語言綁在一起。",
+      "本週試試：餵食時固定用 'More?' 'All done!' 兩句，讓寶寶開始預期這句話出現的時機。",
+    ],
+    checklist: [
+      "本週固定練習1個生活情境的英文短句（如換尿布時的3句話）",
+      "每天至少播放/哼唱1首英文童謠",
+      "指認身體部位或物品時，中英文各說一次",
+      "睡前固定用同一句英文道晚安",
+    ]
+  },
+  "1-2": {
+    title: "1~2歲：模仿與簡單問答的階段",
+    intro: "這個階段開始冒出第一批詞彙，理解力大增，能跟著簡單指令做動作。大人的任務從「單向輸入」轉為「引導模仿、給選擇、簡單問答」。",
+    levels: [
+      {
+        name: "Level A · 簡單指令 Simple Instructions",
+        sub: "一次一個動作指令，配合手勢示範",
+        items: [
+          ["Sit down.","坐下"],
+          ["Give it to mummy.","給媽媽"],
+          ["Come here.","過來"],
+          ["Let's tidy up!","一起收拾"],
+        ]
+      },
+      {
+        name: "Level B · 選擇與提問 Choices &amp; Questions",
+        sub: "用二選一降低回答難度，鼓勵開口",
+        items: [
+          ["Apple or banana?","蘋果還是香蕉？"],
+          ["Do you want more?","還要嗎？"],
+          ["Where's your nose?","鼻子在哪裡？"],
+          ["Big or small?","大的還是小的？"],
+        ]
+      },
+      {
+        name: "Level C · 疊句小故事（原創，仿 ORT 重複句型）",
+        sub: "四句一組、句型重複，方便寶寶預測下一句。角色為原創，非 Oxford Reading Tree 書中角色。",
+        story: [
+          "This is Momo.",
+          "Momo is happy.",
+          "Momo has a ball.",
+          "Up, up, up it goes!"
+        ],
+        storyNote: "這是 Momo，Momo 很開心，Momo 有一顆球，球飛高高！大人可以邊講邊做動作，鼓勵孩子接最後一句。"
+      },
+      {
+        name: "玩耍 Playtime",
+        sub: "生活情境用語：一起玩玩具、輪流玩時固定講的短句",
+        icon: "🧸",
+        items: [
+          ["Let's play!","一起玩吧！"],
+          ["Your turn.","換你了"],
+          ["My turn.","換我了"],
+          ["Good job!","做得好！"],
+        ]
+      },
+      {
+        name: "出門散步 Going Out",
+        sub: "生活情境用語：出門前後、散步時固定講的短句",
+        icon: "🚶",
+        items: [
+          ["Let's put your shoes on.","我們穿鞋子吧"],
+          ["Hold my hand.","牽緊我的手"],
+          ["Look both ways.","看看左右兩邊"],
+          ["We're here!","我們到了！"],
+        ]
+      },
+      {
+        name: "洗手刷牙 Wash &amp; Brush",
+        sub: "生活情境用語：養成衛生習慣的固定短句",
+        icon: "🪥",
+        items: [
+          ["Wash your hands.","洗洗手"],
+          ["Brush your teeth.","刷刷牙"],
+          ["All clean!","乾淨了！"],
+          ["Good job!","做得好！"],
+        ]
+      },
+      {
+        name: "安撫情緒 Comforting",
+        sub: "生活情境用語：孩子鬧脾氣、不安時可以用的安撫語",
+        icon: "😢",
+        items: [
+          ["It's okay.","沒關係"],
+          ["I'm here.","我在這裡"],
+          ["Let's take a deep breath.","我們深呼吸一下"],
+          ["Big hug!","抱一個！"],
+        ]
+      }
+    ],
+    resources: [
+      {name:"CBeebies（Bing / Hey Duggee 等節目）", tag:"bbc", url:"https://www.bbc.co.uk/cbeebies", desc:"BBC 自製兒童節目語速慢、重複性高，是很好的英語輸入來源，可挑短集數陪看。"},
+      {name:"BBC Teach", tag:"bbc", url:"https://www.bbc.co.uk/teach", desc:"BBC 教育資源總站，內含適合幼兒的早期學習素材。"},
+    ],
+    weekly: [
+      "本週試試：玩躲貓貓固定用 'Where's Mummy? ...There she is!'",
+      "本週試試：吃水果時用二選一句型 'Apple or banana?' 讓孩子練習做選擇並回應。",
+      "本週試試：數手指頭 1 to 5，邊數邊摸。",
+      "本週試試：講一次 Momo 的疊句小故事，鼓勵孩子接最後一句 'Up, up, up it goes!'",
+    ],
+    checklist: [
+      "本週練習至少3個簡單指令句（Sit down / Come here / Tidy up）",
+      "用二選一問句取代開放式問題，鼓勵孩子回應",
+      "講一次疊句小故事，觀察孩子是否會跟著接尾音或動作",
+      "陪看一段 CBeebies 短節目並用英文簡單描述畫面",
+    ]
+  },
+  "2-3": {
+    title: "2~3歲：句子與故事情節的階段",
+    intro: "詞彙量快速累積，開始組合2~3字短句，對故事情節有興趣，喜歡重複同一本書。這是最適合開始銜接「前閱讀」與真正分級讀本的階段。",
+    levels: [
+      {
+        name: "Level A · 情緒與疑問句",
+        sub: "描述感受、簡單提問",
+        items: [
+          ["What's this?","這是什麼？"],
+          ["I'm happy / sad / tired.","我開心／難過／累了"],
+          ["It's a dog!","這是一隻狗！"],
+          ["I like it!","我喜歡！"],
+        ]
+      },
+      {
+        name: "Level B · 疊加式重複句型（原創，仿 ORT 分級閱讀法）",
+        sub: "句型逐句疊加，讓孩子能預測、跟讀。這是 ORT 分級閱讀最大的特色：pattern + 可預測性，此為原創範例故事。",
+        story: [
+          "Look, a cat!",
+          "The cat is on the mat.",
+          "The cat is on the mat in the sun.",
+          "The cat is happy in the sun!"
+        ],
+        storyNote: "看，一隻貓！貓在墊子上。貓在陽光下的墊子上。貓在陽光下好開心！每句都疊加前一句，可以搭配自製小圖卡一起玩。"
+      },
+      {
+        name: "Level C · 前閱讀技巧 Pre-reading Skills",
+        sub: "為銜接真正的分級讀本做準備",
+        items: [
+          ["What do you think happens next?","你覺得接下來會發生什麼事？"],
+          ["Let's guess from the cover.","我們從封面猜猜看"],
+          ["Can you find the...?","你能找到...嗎？（指字/指圖）"],
+        ]
+      },
+      {
+        name: "幫忙做家事 Helping Out",
+        sub: "生活情境用語：邀請孩子一起做簡單家事",
+        icon: "🧺",
+        items: [
+          ["Can you help me?","你可以幫我嗎？"],
+          ["Put it in the box.","放進盒子裡"],
+          ["Thank you for helping!","謝謝你幫忙！"],
+          ["Well done!","做得好！"],
+        ]
+      },
+      {
+        name: "遊樂場 At the Playground",
+        sub: "生活情境用語：公園、遊樂場玩耍時固定講的短句",
+        icon: "🎢",
+        items: [
+          ["Let's go down the slide!","我們去溜滑梯吧！"],
+          ["Push me on the swing!","推我盪鞦韆！"],
+          ["Be careful.","小心一點"],
+          ["One more time!","再一次！"],
+        ]
+      },
+      {
+        name: "分享輪流 Sharing &amp; Turns",
+        sub: "生活情境用語：練習分享、等待輪流的短句",
+        icon: "🤝",
+        items: [
+          ["It's your turn.","換你了"],
+          ["Can I have a turn?","可以換我了嗎？"],
+          ["Let's share.","我們一起分享"],
+          ["Thank you!","謝謝你！"],
+        ]
+      },
+      {
+        name: "情緒表達 Talking About Feelings",
+        sub: "生活情境用語：引導孩子說出自己的感受",
+        icon: "😊",
+        items: [
+          ["How do you feel?","你現在感覺怎麼樣？"],
+          ["I feel happy.","我覺得開心"],
+          ["I feel sad.","我覺得難過"],
+          ["It's okay to feel that way.","有這種感覺沒關係"],
+        ]
+      }
+    ],
+    resources: [
+      {name:"Oxford Owl 免費電子書庫", tag:"oxford", url:"https://home.oxfordowl.co.uk/reading/free-ebooks/", desc:"Oxford University Press 官方免費分級電子書平台，註冊帳號後可線上閱讀多本 Oxford Reading Tree 系列讀本，適合這個階段開始接觸真正的分級讀本。"},
+      {name:"Oxford Reading Tree 分級指南（給家長）", tag:"oxford", url:"https://home.oxfordowl.co.uk/reading/reading-schemes-oxford-levels/oxford-reading-tree-levels/", desc:"Oxford Owl 官方文章，說明 ORT 各 Stage／顏色分級的邏輯，適合先了解框架，之後對照你手邊或之後購入的實體書。"},
+      {name:"CBeebies", tag:"bbc", url:"https://www.bbc.co.uk/cbeebies", desc:"持續作為聽力輸入來源，這階段可以挑情節較完整、句型重複的節目。"},
+    ],
+    weekly: [
+      "本週試試：讀完一本繪本後問 'What happened?' 讓孩子用簡單詞彙回顧劇情。",
+      "本週試試：練習疊加式重複句型故事，換孩子熟悉的動物或玩具當主角。",
+      "本週試試：翻書前先玩「封面猜劇情」：Let's guess from the cover!",
+      "本週試試：去 Oxford Owl 免費電子書庫試讀一本最低階（Stage 1／粉紅色 A）的電子書。",
+    ],
+    checklist: [
+      "本週共讀至少2次，讀後用英文問一次 'What happened?'",
+      "練習一次疊加式重複句型小故事",
+      "嘗試 Oxford Owl 免費帳號註冊，試讀第一本分級電子書",
+      "陪看一段 CBeebies 節目後，用英文簡單覆述劇情",
+    ]
+  }
+};
+
+const RESOURCE_TAG_LABEL = {bbc:"BBC", oxford:"Oxford", original:"原創", guide:"文章"};
+
+const READING_DATA = {
+  "0-1": {
+    title: "0~1歲：讓書本變成有趣的感官玩具",
+    intro: "這個階段『共讀』的目的不是讀完一本書，而是讓寶寶對書本、聲音、大人的陪伴產生正向連結——念不完、坐不住都完全沒關係。",
+    principles: [
+      {t:"目標是「愛上書」，不是「學會讀」", d:"這階段共讀的重點是建立正向連結，不是識字或聽懂故事內容。"},
+      {t:"跟著寶寶的節奏走", d:"他想翻頁、想咬書、想爬走都沒關係，共讀時間可以很短，30秒到2分鐘都算數。"},
+      {t:"你的聲音比書的內容更重要", d:"誇張的語調、表情、擬聲詞，比正確唸完整句話重要得多。"},
+    ],
+    tips: [
+      {t:"選硬頁書／布書", d:"耐咬耐撕，方便小手翻頁，也不怕口水弄濕。"},
+      {t:"指物命名", d:"一頁只講1~2個重點詞，指著圖案慢慢說，重複好幾次。"},
+      {t:"讓他主導", d:"想一直翻同一頁、跳著看都沒關係，共讀不用照順序進行。"},
+      {t:"加入身體接觸", d:"抱在懷裡念，讓共讀連結安全感與親密感，而不只是資訊輸入。"},
+      {t:"融入日常", d:"洗澡書、布書可以隨手拿起來，不用特別安排「共讀時間」。"},
+    ],
+    phrases: [
+      ["Let's read a book!","我們來看書吧！"],
+      ["Look at this!","你看這個！"],
+      ["What's this?","這是什麼？"],
+      ["Turn the page.","翻頁囉。"],
+      ["The end!","故事說完了！"],
+    ],
+    faq: [
+      {q:"他都在咬書／撕書怎麼辦？", a:"這是這個年紀探索書本的正常方式，選耐咬的布書／硬頁書就好，不需要制止。"},
+      {q:"一定要念完整本書嗎？", a:"不用。念到他失去興趣就可以停，隨時都可以重新開始。"},
+      {q:"他好像都沒在聽？", a:"眼神接觸跟語言輸入其實一直在發生，即使他看起來在玩別的東西。"},
+    ]
+  },
+  "1-2": {
+    title: "1~2歲：從單向朗讀變成雙向互動",
+    intro: "這階段孩子理解力大增、開始有自己的意見，共讀可以從「你念他聽」慢慢變成「一起玩書」。",
+    principles: [
+      {t:"重複是禮物，不是無聊", d:"同一本書要求讀十次很正常，重複能加深語言記憶與安全感。"},
+      {t:"讓他當「翻頁的人」", d:"把主導權交給他，共讀變成雙向互動，而不是單向朗讀。"},
+      {t:"指認比劇情重要", d:"這階段還在累積詞彙，多問「這是什麼」比追完整劇情更有幫助。"},
+    ],
+    tips: [
+      {t:"選重複句型的書", d:"像「這是⋯」這種可預測的句型，讓孩子能預期、甚至跟著說。"},
+      {t:"停下來等他反應", d:"唸完一句留白幾秒，給他機會指、發出聲音、或說單字。"},
+      {t:"用手指著字或圖", d:"養成「文字是有意義的符號」這個概念，之後銜接閱讀會更自然。"},
+      {t:"允許離題", d:"他想聊別的、想玩旁邊的玩具，共讀可以隨時暫停再繼續，不用堅持讀完。"},
+      {t:"短時間、高頻率", d:"一天3次、每次5分鐘，通常比一次讀30分鐘更有效。"},
+    ],
+    phrases: [
+      ["What's this?","這是什麼？"],
+      ["Can you find the...?","你能找到...嗎？"],
+      ["Turn the page.","翻頁囉。"],
+      ["One more time?","再一次好嗎？"],
+      ["Good listening!","你聽得好認真！"],
+    ],
+    faq: [
+      {q:"他每次都要選同一本怎麼辦？", a:"完全正常，重複閱讀對這個階段的語言發展很有幫助，可以陪他讀到他自己想換書為止。"},
+      {q:"他坐不住怎麼辦？", a:"可以邊走邊唸、站著讀，不用堅持坐好，共讀的「形式」比姿勢重要。"},
+    ]
+  },
+  "2-3": {
+    title: "2~3歲：用提問取代朗讀",
+    intro: "這階段最重要的轉變，是從「唸給他聽」進階到「陪他一起想」——共讀開始變成一場對話。",
+    principles: [
+      {t:"用提問取代朗讀", d:"少一點單純朗讀，多一點一起討論，是這階段共讀最大的轉變。"},
+      {t:"對話式閱讀（Dialogic Reading）", d:"核心技巧是 PEER：Prompt提問、Evaluate回應、Expand延伸、Repeat重複他說的話。"},
+      {t:"把故事連結到他的生活", d:"「你上次也⋯對不對？」能幫助孩子理解故事跟現實生活的關聯。"},
+    ],
+    tips: [
+      {t:"封面猜劇情", d:"翻開書之前先問「你覺得這是關於什麼的？」，練習預測能力。"},
+      {t:"多問開放式問題", d:"少問「這是什麼顏色」這類單一答案的問題，多問「你覺得接下來會怎樣？」"},
+      {t:"等待與延伸", d:"孩子回答後，重複他說的話並加一點新資訊，幫助他把句子說得更完整。"},
+      {t:"鼓勵預測與回顧", d:"讀到一半停下來問「接下來會發生什麼事？」，讀完後問「發生了什麼事？」"},
+      {t:"讓他選書、甚至「假裝讀」", d:"讓孩子看著圖自己編故事，是很重要的前閱讀能力，不用糾正跟書上不一樣的地方。"},
+    ],
+    phrases: [
+      ["What do you think happens next?","你覺得接下來會發生什麼事？"],
+      ["Why do you think that happened?","你覺得為什麼會這樣？"],
+      ["Have you ever felt like that?","你有過這種感覺嗎？"],
+      ["Let's guess from the cover.","我們從封面猜猜看。"],
+      ["Can you tell me what happened?","你可以告訴我發生了什麼事嗎？"],
+    ],
+    faq: [
+      {q:"他自己亂編故事，跟書上寫的不一樣怎麼辦？", a:"這是很棒的訊號！代表他在練習敘事能力，不需要糾正，可以跟著他的版本一起玩。"},
+      {q:"該幫他選什麼書？", a:"讓孩子自己選，就算每次都選同一本，「主動選擇」本身就是閱讀興趣養成的關鍵。"},
+    ]
+  }
+};
+
+const ESL_DATA = {
+  principles: [
+    {t:"重點是「出現頻率」，不是「發音完美」", d:"小小孩不會挑剔大人的腔調，他需要的是常常聽到、常常用到。大人先求敢開口、常開口，發音會在過程中慢慢進步，不用等準備好才開始。"},
+    {t:"可理解輸入（Comprehensible Input）", d:"孩子聽不懂的英文只是噪音。搭配手勢、表情、實物、當下情境，讓他就算不懂每個字，也能猜到意思——這比逐字翻譯有效很多。"},
+    {t:"環境 > 教材", d:"與其安排「上課時間」，不如把英文變成生活背景的一部分：固定的情境用固定的英文（換尿布、吃飯、出門），效果比買教材更持久。"},
+    {t:"不強迫輸出、不糾正文法", d:"這個階段的目標是「聽懂、有語感」，不是「說對」。孩子還沒開口是正常的沉默期，糾正文法反而會讓他不敢開口。"},
+  ],
+  tactics: [
+    {icon:"🏷️", t:"幫家裡的東西貼上英文標籤", d:"門、桌子、冰箱、玩具箱貼上簡單英文單字，大人自己也順便複習，路過就唸一次給孩子聽。"},
+    {icon:"🔁", t:"固定情境固定用語", d:"換尿布、洗澡、吃飯、出門，每次都用同一組簡單句子（可以直接參考本App「0~1歲／1~2歲／2~3歲」分頁的情境詞彙），重複本身就是學習。"},
+    {icon:"🎧", t:"背景式聽力浸潤", d:"開車、做家事、玩耍時，播放適合年齡的英文兒歌或 BBC CBeebies 節目當背景音，不用要求孩子專心聽，耳朵習慣了語調跟節奏就有效果。"},
+    {icon:"📖", t:"每天固定的共讀 / 唸讀時間", d:"睡前或吃完飯後留 5~10 分鐘，用簡單英文繪本或本App的疊句小故事唸給他聽，時間短但每天做，比偶爾唸很久更有效（詳見「共讀」分頁）。"},
+    {icon:"🙆", t:"搭配動作、表情、實物", d:"說 up 的時候真的舉手，說 hungry 的時候摸摸肚子，讓孩子透過肢體語言理解意思，不需要中文翻譯。"},
+    {icon:"👏", t:"多鼓勵，少糾正", d:"孩子願意模仿、願意嘗試發音，就值得稱讚（可以用「鼓勵」情境的句子），文法或發音不標準先不用糾正，之後自然會修正。"},
+    {icon:"🗣️", t:"大人自己也在練習，讓孩子看見", d:"可以跟孩子說「媽媽也在學英文喔」，大人自己開口練習發音（善用本App的🔊播放發音功能），孩子會把英文當成生活的一部分，而不是「考試科目」。"},
+    {icon:"📅", t:"固定但輕量的節奏，勝過偶爾高強度", d:"每天 10~15 分鐘、融入日常routine，比一週一次密集上課更容易養成習慣、也更容易持續。"},
+  ],
+  faq: [
+    {q:"大人自己英文不好，會不會教錯？", a:"這個階段孩子需要的是「大量重複的簡單語塊」，不是複雜文法。大人可以先從幾個固定情境的短句開始（本App都有附發音可以先練習），比完美的文法更重要的是願意常常開口。"},
+    {q:"沒有外師、也不能常常出國，這樣有用嗎？", a:"研究普遍認為，語言發展的關鍵是「有意義的重複輸入」的總量與品質，不是一定要母語人士。善用影音、繪本、固定情境對話，家裡一樣可以建立有效的語言環境。"},
+    {q:"要不要規定家裡「這個時段只能說英文」？", a:"對小小孩來說，強制的英文時段容易讓氣氛變緊繃。比較適合的做法是把英文自然地嵌進特定情境（洗澡、換尿布），而不是切出一段「上課時間」。"},
+    {q:"孩子都不開口說英文，是不是沒有用？", a:"0~3歲多半處於「沉默期」，输入(input)遠比输出(output)先發生。只要持續有好的輸入，語感會先在腦中累積，開口只是時間問題，不用心急。"},
+  ],
+  resources: [
+    {name:"How to Build an English-Speaking Environment at Home Without Native Speakers", tag:"guide", url:"https://competitivecracker.com/blog/how-to-build-an-english-speaking-environment", desc:"文章整理了沒有母語人士陪伴時，如何靠環境設計（標籤、固定聽力時段、開口練習）持續累積英文輸入，原文針對自學者，作法同樣適用於幫小孩打造環境。"},
+    {name:"How to Create an Engaging English Learning Environment at Home", tag:"guide", url:"https://sparkstudio.co/articles/spoken-english/create-engaging-english-learning-environment-at-home/", desc:"介紹如何把英文自然融入居家日常活動、營造讓孩子願意主動參與的學習氣氛。"},
+    {name:"Best Ways to Create an Immersive Environment for ESL at Home", tag:"guide", url:"https://www.novakidschool.com/blog/the-best-ways-to-create-an-immersive-environment-for-esl-at-home/", desc:"整理標籤物品、生活routine融入英文、善用影音與鼓勵機制等具體作法，可以對照本頁的作法一起參考。"},
+    {name:"CBeebies", tag:"bbc", url:"https://www.bbc.co.uk/cbeebies", desc:"適合當作背景聽力輸入的免費兒童節目，語速慢、重複性高。"},
+    {name:"Oxford Owl 免費電子書庫", tag:"oxford", url:"https://home.oxfordowl.co.uk/reading/free-ebooks/", desc:"官方免費分級電子書平台，共讀素材的來源之一。"},
+  ]
+};
+
+/* ---------------- Storage helpers ---------------- */
+function storageAvailable(){
+  try{
+    const k = "__test__";
+    localStorage.setItem(k,"1");
+    localStorage.removeItem(k);
+    return true;
+  }catch(e){ return false; }
+}
+const HAS_STORAGE = storageAvailable();
+const memStore = {};
+function getItem(key){
+  if(HAS_STORAGE) return localStorage.getItem(key);
+  return memStore[key] ?? null;
+}
+function setItem(key, val){
+  if(HAS_STORAGE) localStorage.setItem(key, val);
+  else memStore[key] = val;
+}
+
+/* ---------------- Persisted accordion open/close state ---------------- */
+// scopeKey matches the panel id suffix, e.g. "0-1", "1-2", "2-3", "reading"
+function getPersistedOpenKeys(scopeKey){
+  try{
+    const raw = JSON.parse(getItem("tet_openkeys_" + scopeKey) || "null");
+    if(Array.isArray(raw)) return raw;
+  }catch(e){}
+  return null; // null = "no saved state yet", distinct from [] = "user closed everything"
+}
+function savePersistedOpenKeys(scopeKey, keys){
+  try{ setItem("tet_openkeys_" + scopeKey, JSON.stringify(keys)); }catch(e){}
+}
+// toggle doesn't bubble, so this must be a capture-phase listener on document
+document.addEventListener("toggle", (e) => {
+  const details = e.target;
+  if(!details || !details.dataset || !details.dataset.levelkey) return;
+  const panel = details.closest(".age-panel");
+  if(!panel) return;
+  const scopeKey = panel.id.replace("panel-", "");
+  const openKeys = Array.from(panel.querySelectorAll("details[data-levelkey][open]")).map(d => d.dataset.levelkey);
+  savePersistedOpenKeys(scopeKey, openKeys);
+}, true);
+
+/* ---------------- Text-to-speech (British English) ---------------- */
+const HAS_TTS = ("speechSynthesis" in window);
+let ttsVoices = [];
+let currentVoice = null;
+let currentRate = parseFloat(getItem("tet_tts_rate") || "0.85");
+
+function escAttr(s){
+  return String(s).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+// Rank voices so the most convincingly British ones come first.
+function britishScore(v){
+  const lang = (v.lang||"").toLowerCase();
+  const name = (v.name||"").toLowerCase();
+  let score = 0;
+  if(lang === "en-gb") score += 100;
+  else if(lang.startsWith("en-gb")) score += 80;
+  if(/british|uk english/.test(name)) score += 40;
+  if(/daniel|kate|serena|arthur|martha|hazel|george|oliver|stephanie/.test(name)) score += 30;
+  if(lang.startsWith("en")) score += 5;
+  return score;
+}
+
+function populateVoiceList(){
+  if(!HAS_TTS) return;
+  ttsVoices = speechSynthesis.getVoices()
+    .filter(v => (v.lang||"").toLowerCase().startsWith("en"))
+    .sort((a,b) => britishScore(b) - britishScore(a));
+
+  const sel = document.getElementById("voiceSelect");
+  const hint = document.getElementById("audioHint");
+  if(!sel) return;
+
+  if(ttsVoices.length === 0){
+    sel.innerHTML = `<option>找不到英文語音</option>`;
+    sel.disabled = true;
+    if(hint) hint.innerHTML = `這個瀏覽器/裝置目前抓不到任何英文語音包。iPhone/Mac 通常內建 Daniel、Kate 等英式發音；Android/Windows 可能要到系統設定裡另外下載語音包，或改用 Chrome 開啟本頁再試一次。`;
+    currentVoice = null;
+    return;
+  }
+
+  const savedName = getItem("tet_tts_voice");
+  sel.innerHTML = ttsVoices.map(v =>
+    `<option value="${escAttr(v.name)}">${escAttr(v.name)} (${v.lang})${britishScore(v)>=80 ? " 🇬🇧" : ""}</option>`
+  ).join("");
+
+  const found = ttsVoices.find(v => v.name === savedName) || ttsVoices[0];
+  sel.value = found.name;
+  currentVoice = found;
+
+  if(hint){
+    if(britishScore(found) >= 80){
+      hint.textContent = `目前使用：${found.name}（英式發音）。`;
+      hint.classList.remove("warn");
+    }else{
+      hint.textContent = `目前找不到明確標示英式（en-GB）的語音，已選用最接近的「${found.name}」。可以從上面選單換一個試試，或到系統設定安裝英式語音包。`;
+      hint.classList.add("warn");
+    }
+  }
+}
+
+function speak(text, onend){
+  if(!HAS_TTS || !text) { if(onend) onend(); return; }
+  speechSynthesis.cancel();
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = "en-GB";
+  if(currentVoice) utter.voice = currentVoice;
+  utter.rate = currentRate;
+  utter.onend = () => { if(onend) onend(); };
+  utter.onerror = () => { if(onend) onend(); };
+  speechSynthesis.speak(utter);
+}
+
+function playSequence(texts, btn){
+  if(!HAS_TTS || !texts.length) return;
+  let i = 0;
+  if(btn){ btn.disabled = true; btn.classList.add("playing"); }
+  const stepEnd = () => {
+    i++;
+    if(i < texts.length){
+      setTimeout(() => playOne(texts[i], stepEnd), 350);
+    }else{
+      if(btn){ btn.disabled = false; btn.classList.remove("playing"); }
+    }
+  };
+  playOne(texts[0], stepEnd);
+}
+
+document.addEventListener("click", (e) => {
+  const sb = e.target.closest(".speak-btn");
+  if(sb && sb.dataset.speak){
+    sb.classList.add("playing");
+    playOne(sb.dataset.speak, () => sb.classList.remove("playing"));
+    return;
+  }
+  const pab = e.target.closest(".playall-btn");
+  if(pab && pab.dataset.texts){
+    playSequence(JSON.parse(pab.dataset.texts), pab);
+    return;
+  }
+});
+
+/* ---------------- Rendering ---------------- */
+function weekIndex(len){
+  const now = new Date();
+  const start = new Date(now.getFullYear(),0,1);
+  const days = Math.floor((now - start) / 86400000);
+  const week = Math.ceil((days + start.getDay() + 1) / 7);
+  return week % len;
+}
+
+function renderLevelCard(ageKey, levelKey, icon, name, sub, baseItems, extraItems, deletableScenario, isOpen){
+  baseItems = baseItems || [];
+  extraItems = extraItems || [];
+  const combinedTexts = baseItems.map(it => it[0]).concat(extraItems.map(it => it.en).filter(Boolean));
+  const playAllBtn = (HAS_TTS && combinedTexts.length) ? `<button class="playall-btn" data-texts="${escAttr(JSON.stringify(combinedTexts))}">▶ 全部播放</button>` : "";
+  const delScenarioBtn = deletableScenario ? `<button class="mini-btn del-scenario-btn" data-age="${ageKey}" data-level="${levelKey}" title="刪除整個情境">🗑 刪除情境</button>` : "";
+
+  const recEnabled = isRecordingEnabledFor(ageKey, levelKey);
+
+  let body = `<div class="card-head-row">${playAllBtn}${delScenarioBtn}</div>`;
+  if(baseItems.length || extraItems.length){
+    body += `<ul class="phrase-list">`;
+    baseItems.forEach(it => {
+      body += `<li>
+        <div class="txt"><div class="en">${it[0]}</div><div class="zh">${it[1]}</div></div>
+        <div style="display:flex; align-items:center; gap:6px;">
+          ${HAS_TTS ? `<button class="speak-btn${recEnabled && recordedKeys.has(recKeyFor(it[0])) ? " has-rec" : ""}" data-speak="${escAttr(it[0])}" aria-label="播放發音" title="播放發音">🔊</button>` : ""}
+          ${recEnabled ? recControlsHTML(it[0]) : ""}
+        </div>
+      </li>`;
+    });
+    extraItems.forEach((it, idx) => {
+      body += `<li>
+        <div class="txt"><div class="en">${escAttr(it.en) || "（未填英文）"}</div><div class="zh">${escAttr(it.zh) || "（未填中文）"}</div></div>
+        <div style="display:flex; align-items:center; gap:6px;">
+          ${HAS_TTS && it.en ? `<button class="speak-btn${recEnabled && it.en && recordedKeys.has(recKeyFor(it.en)) ? " has-rec" : ""}" data-speak="${escAttr(it.en)}" aria-label="播放發音" title="播放發音">🔊</button>` : ""}
+          ${recEnabled && it.en ? recControlsHTML(it.en) : ""}
+          <button class="del-btn del-extra-btn" data-age="${ageKey}" data-level="${levelKey}" data-idx="${idx}" aria-label="刪除" title="刪除">🗑</button>
+        </div>
+      </li>`;
+    });
+    body += `</ul>`;
+  }else{
+    body += `<p class="custom-empty">這個情境還沒有詞彙，用下面的「新增詞彙」加一個吧。</p>`;
+  }
+
+  return `<details class="card" data-levelkey="${levelKey}"${isOpen ? " open" : ""}>
+    <summary>
+      <span class="badge">${icon}</span>
+      <span class="s-title">${name}<span class="sub-inline">${sub || ""}</span></span>
+      <span class="chev">▾</span>
+    </summary>
+    <div class="level-body">${body}</div>
+  </details>`;
+}
+
+function renderAgePanel(ageKey, forcedOpenKeys){
+  const data = AGE_DATA[ageKey];
+  const customData = loadCustomData(ageKey);
+  const panel = document.getElementById("panel-" + ageKey);
+  // forcedOpenKeys (from refreshAgePanel after an edit) always wins; otherwise fall back to
+  // whatever the user last had open, so re-launching the app restores their place.
+  const openKeys = forcedOpenKeys || getPersistedOpenKeys(ageKey);
+  const actualOpenKeys = [];
+  let html = `
+    <div class="stagehead">
+      <h2>${data.title}</h2>
+      <p>${data.intro}</p>
+    </div>
+    <div class="grid2">
+  `;
+
+  const targetOptions = [];
+
+  data.levels.forEach((lvl, i) => {
+    const levelKey = "b" + i;
+    const defaultIcon = ["🔤","💬","📗"][i] || "🔤";
+    const icon = lvl.icon || defaultIcon;
+    if(lvl.story){
+      // Story-style levels are a fixed narrative and aren't extendable with loose vocabulary.
+      const storyOpen = openKeys ? openKeys.includes(levelKey) : i === 0;
+      if(storyOpen) actualOpenKeys.push(levelKey);
+      html += `<details class="card" data-levelkey="${levelKey}"${storyOpen ? " open" : ""}>
+        <summary>
+          <span class="badge">${icon}</span>
+          <span class="s-title">${lvl.name}<span class="sub-inline">${lvl.sub}</span></span>
+          <span class="chev">▾</span>
+        </summary>
+        <div class="level-body">
+          <div class="story-block">` +
+          lvl.story.map(line => `
+            <div class="story-line">
+              <span>${line}</span>
+              ${HAS_TTS ? `<button class="speak-btn small" data-speak="${escAttr(line)}" aria-label="播放發音" title="播放發音">🔊</button>` : ""}
+            </div>`).join("") +
+          `<div class="zh-note">${lvl.storyNote}</div></div>
+        </div>
+      </details>`;
+    }else{
+      const extras = customData.extras[levelKey] || [];
+      const isOpen = openKeys ? openKeys.includes(levelKey) : i === 0;
+      if(isOpen) actualOpenKeys.push(levelKey);
+      html += renderLevelCard(ageKey, levelKey, icon, lvl.name, lvl.sub, lvl.items, extras, false, isOpen);
+      targetOptions.push(`<option value="${levelKey}">${lvl.name}</option>`);
+    }
+  });
+
+  customData.customLevels.forEach(cl => {
+    const isOpen = openKeys ? openKeys.includes(cl.key) : false;
+    if(isOpen) actualOpenKeys.push(cl.key);
+    html += renderLevelCard(ageKey, cl.key, cl.icon || "📌", cl.name, cl.sub || "你自訂的情境", [], cl.items, true, isOpen);
+    targetOptions.push(`<option value="${escAttr(cl.key)}">${cl.name}（自訂）</option>`);
+  });
+
+  html += `</div>`;
+  savePersistedOpenKeys(ageKey, actualOpenKeys);
+
+  // add vocabulary — into an existing scenario, or a brand new one
+  html += `<div class="card custom-card" data-age="${ageKey}">
+    <h3><span class="badge">➕</span>新增詞彙</h3>
+    <p class="card-sub">可以把新單字或句子加進「既有情境」，也可以建立一個全新的情境分類。打好英文或中文任一邊，按「翻譯」可以幫你猜另一半（用免費線上翻譯，僅供參考，存之前記得檢查一下）。</p>
+    <div class="custom-row">
+      <select class="target-select" data-age="${ageKey}">
+        ${targetOptions.join("")}
+        <option value="__new__">➕ 建立新的情境</option>
+      </select>
+    </div>
+    <div class="custom-row new-scenario-row" data-age="${ageKey}" style="display:none;">
+      <input type="text" class="new-scenario-icon" placeholder="emoji（可留空）" style="flex:0 0 84px;" maxlength="4">
+      <input type="text" class="new-scenario-name" placeholder="新情境名稱，例如：搭車 On the Bus">
+    </div>
+    <div class="custom-row">
+      <input type="text" class="custom-en" placeholder="English phrase">
+      <button class="mini-btn translate-btn" data-dir="en2zh">翻成中文</button>
+    </div>
+    <div class="custom-row">
+      <input type="text" class="custom-zh" placeholder="中文意思">
+      <button class="mini-btn translate-btn" data-dir="zh2en">Translate to EN</button>
+    </div>
+    <button class="add-custom-btn" data-age="${ageKey}">＋ 加入詞彙</button>
+    <p class="custom-status" id="customStatus-${ageKey}"></p>
+  </div>`;
+
+  // weekly suggestion
+  const wIdx = weekIndex(data.weekly.length);
+  html += `<div class="card">
+    <h3><span class="badge">📅</span>本週活動建議</h3>
+    <div class="card-sub">依當週自動輪換，也可以自己往前後挑一個喜歡的來用</div>
+    <div class="week-box">
+      <div class="num">第${wIdx+1}則</div>
+      <div class="txt">${data.weekly[wIdx]}</div>
+    </div>
+  </div>`;
+
+  // resources
+  html += `<div class="card">
+    <h3><span class="badge">🔗</span>延伸資源</h3>
+    <ul class="link-list">` +
+    data.resources.map(r => `
+      <li>
+        <span class="resource-tag tag-${r.tag}">${RESOURCE_TAG_LABEL[r.tag]}</span><br>
+        <a href="${r.url}" target="_blank" rel="noopener">${r.name}<span class="ext">前往 ↗</span></a>
+        <div class="desc">${r.desc}</div>
+      </li>`).join("") +
+    `</ul>
+  </div>`;
+
+  // checklist with progress
+  const storeKey = "tet_checklist_" + ageKey;
+  let saved = {};
+  try{ saved = JSON.parse(getItem(storeKey) || "{}"); }catch(e){ saved = {}; }
+
+  html += `<div class="card">
+    <h3><span class="badge">✅</span>本週進度追蹤</h3>
+    <div class="card-sub">${HAS_STORAGE ? "會自動保存在這台裝置上" : "目前瀏覽環境不支援保存，重新整理後會清空（部署成正式網站後就能保存）"}</div>
+    <div class="progress-bar"><div id="pbar-${ageKey}"></div></div>
+    <div class="progress-text" id="ptext-${ageKey}"></div>
+    <ul class="checklist" id="checklist-${ageKey}">` +
+    data.checklist.map((c,i) => {
+      const checked = !!saved[i];
+      return `<li class="${checked ? "done":""}">
+        <input type="checkbox" id="chk-${ageKey}-${i}" data-age="${ageKey}" data-idx="${i}" ${checked?"checked":""}>
+        <label for="chk-${ageKey}-${i}">${c}</label>
+      </li>`;
+    }).join("") +
+    `</ul>
+  </div>`;
+
+  panel.innerHTML = html;
+  updateProgress(ageKey);
+}
+
+/* ---------------- Custom vocabulary (extend existing scenarios or create new ones) ---------------- */
+function loadCustomData(ageKey){
+  try{
+    const raw = JSON.parse(getItem("tet_customdata_" + ageKey) || "null");
+    if(raw && typeof raw === "object"){
+      return { extras: raw.extras || {}, customLevels: raw.customLevels || [] };
+    }
+  }catch(e){}
+  return { extras: {}, customLevels: [] };
+}
+function saveCustomData(ageKey, data){
+  setItem("tet_customdata_" + ageKey, JSON.stringify(data));
+}
+
+function refreshAgePanel(ageKey, forceOpenKey, selectTargetKey){
+  const panel = document.getElementById("panel-" + ageKey);
+  const openKeys = new Set(Array.from(panel.querySelectorAll("details[open]")).map(d => d.dataset.levelkey));
+  if(forceOpenKey) openKeys.add(forceOpenKey);
+  const prevSelected = (document.querySelector(`.target-select[data-age="${ageKey}"]`) || {}).value;
+  const wantSelected = selectTargetKey || prevSelected;
+  renderAgePanel(ageKey, Array.from(openKeys));
+  if(wantSelected){
+    const sel = document.querySelector(`.target-select[data-age="${ageKey}"]`);
+    if(sel && Array.from(sel.options).some(o => o.value === wantSelected)){
+      sel.value = wantSelected;
+      toggleNewScenarioRow(ageKey);
+    }
+  }
+}
+
+/* ---------------- Family recordings (cloud, shared across devices via /api/*) ----------------
+   MVP scope: only scenarios listed in RECORDING_ENABLED_LEVELS show the 🎙 record control.
+   Add more {age, levelKey} entries here to roll it out to other scenarios later. */
+const RECORDING_ENABLED_LEVELS = [
+  {age:"0-1", levelKey:"b0"},   // Level A · 單詞指認 Point & Say
+  {age:"0-1", levelKey:"b11"},  // 情緒 Feelings
+];
+function isRecordingEnabledFor(ageKey, levelKey){
+  return RECORDING_ENABLED_LEVELS.some(x => x.age === ageKey && x.levelKey === levelKey);
+}
+
+function recKeyFor(text){
+  // Fast, synchronous, deterministic hash — not cryptographic, just needs every family
+  // member's device to compute the same key for the same phrase so recordings line up.
+  let h = 0x811c9dc5;
+  for(let i = 0; i < text.length; i++){
+    h ^= text.charCodeAt(i);
+    h = Math.imul(h, 0x01000193);
+  }
+  return (h >>> 0).toString(16).padStart(8, "0");
+}
+
+function recControlsHTML(text){
+  if(!text) return "";
+  const key = recKeyFor(text);
+  const has = recordedKeys.has(key);
+  return `${has ? `<span class="rec-badge">👪 已錄</span>` : ""}<button class="rec-btn" data-rec-text="${escAttr(text)}" data-rec-key="${key}" aria-label="錄製家人發音" title="錄製家人發音">🎙</button>`;
+}
+
+let recordedKeys = new Set();
+async function loadRecordedKeys(){
+  try{
+    const res = await fetch("/api/rec-list", { cache: "no-store" });
+    if(!res.ok) return;
+    const data = await res.json();
+    recordedKeys = new Set(data.keys || []);
+  }catch(e){ /* offline, or the API isn't deployed yet — app just keeps using TTS only */ }
+}
+
+function getPasscode(){ return getItem("tet_family_passcode") || ""; }
+function askPasscode(){
+  const p = prompt("請輸入家庭密語（用來保護錄音，避免陌生人亂上傳/刪除）：");
+  if(p) setItem("tet_family_passcode", p);
+  return p || "";
+}
+
+async function apiWrite(method, path, body, contentType){
+  let passcode = getPasscode();
+  if(!passcode) passcode = askPasscode();
+  if(!passcode) return null;
+  const headers = { "X-Passcode": passcode };
+  if(contentType) headers["Content-Type"] = contentType;
+  let res;
+  try{
+    res = await fetch(path, { method, headers, body });
+  }catch(e){
+    return null;
+  }
+  if(res.status === 401){
+    setItem("tet_family_passcode", "");
+    alert("密語不正確，請重新輸入。");
+  }
+  return res;
+}
+
+function playOne(text, onend){
+  const key = recKeyFor(text);
+  const done = () => { if(onend) onend(); };
+  if(recordedKeys.has(key)){
+    const audio = new Audio("/api/rec/" + key);
+    audio.addEventListener("ended", done);
+    audio.addEventListener("error", () => speak(text, done));
+    audio.play().catch(() => speak(text, done));
+    return;
+  }
+  speak(text, done);
+}
+
+function setRecordingMode(on){
+  document.body.classList.toggle("rec-mode", on);
+  setItem("tet_recording_mode", on ? "1" : "0");
+}
+
+let activeRecorder = null;
+function closeActiveRecorder(){
+  if(!activeRecorder) return;
+  try{
+    if(activeRecorder.mediaRecorder && activeRecorder.mediaRecorder.state !== "inactive"){
+      activeRecorder.mediaRecorder.stop();
+    }
+    if(activeRecorder.stream){
+      activeRecorder.stream.getTracks().forEach(t => t.stop());
+    }
+  }catch(e){}
+  if(activeRecorder.panelEl && activeRecorder.panelEl.parentNode){
+    activeRecorder.panelEl.parentNode.removeChild(activeRecorder.panelEl);
+  }
+  activeRecorder = null;
+}
+
+function pickRecordingMimeType(){
+  const candidates = ["audio/mp4", "audio/webm;codecs=opus", "audio/webm", "audio/ogg;codecs=opus"];
+  for(const c of candidates){
+    if(window.MediaRecorder && MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(c)) return c;
+  }
+  return "";
+}
+
+function openRecorderFor(text, key, anchorLi){
+  closeActiveRecorder();
+  if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || !window.MediaRecorder){
+    alert("這個瀏覽器不支援錄音功能，建議改用手機/電腦上最新版的 Chrome 或 Safari。");
+    return;
+  }
+  const panel = document.createElement("li");
+  panel.innerHTML = `<div class="recorder-panel">
+    <span class="rp-status">🎙 準備錄音「${escAttr(text)}」…</span>
+    <button class="mini-btn rp-start">⏺ 開始錄音</button>
+    <button class="mini-btn rp-close">✕ 關閉</button>
+  </div>`;
+  anchorLi.parentNode.insertBefore(panel, anchorLi.nextSibling);
+  activeRecorder = { stream:null, mediaRecorder:null, panelEl:panel, key, text };
+
+  panel.querySelector(".rp-close").addEventListener("click", closeActiveRecorder);
+  panel.querySelector(".rp-start").addEventListener("click", async () => {
+    const statusEl = panel.querySelector(".rp-status");
+    try{
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mimeType = pickRecordingMimeType();
+      const mr = new MediaRecorder(stream, mimeType ? { mimeType } : undefined);
+      const chunks = [];
+      mr.ondataavailable = (e) => { if(e.data && e.data.size) chunks.push(e.data); };
+      mr.onstop = () => {
+        const blob = new Blob(chunks, { type: mimeType || "audio/webm" });
+        showRecordingPreview(panel, blob, mimeType, text, key, anchorLi);
+      };
+      mr.start();
+      activeRecorder.stream = stream;
+      activeRecorder.mediaRecorder = mr;
+      statusEl.textContent = "🔴 錄音中…（最長 8 秒，或按停止）";
+      const startBtn = panel.querySelector(".rp-start");
+      startBtn.style.display = "none";
+      const stopBtn = document.createElement("button");
+      stopBtn.className = "mini-btn rp-stop";
+      stopBtn.textContent = "⏹ 停止";
+      stopBtn.addEventListener("click", () => { if(mr.state !== "inactive") mr.stop(); });
+      panel.querySelector(".recorder-panel").insertBefore(stopBtn, panel.querySelector(".rp-close"));
+      setTimeout(() => { if(mr.state !== "inactive") mr.stop(); }, 8000);
+    }catch(err){
+      statusEl.textContent = "⚠️ 無法取得麥克風權限，請確認瀏覽器/系統設定允許此網站使用麥克風。";
+    }
+  });
+}
+
+function showRecordingPreview(panel, blob, mimeType, text, key, anchorLi){
+  const url = URL.createObjectURL(blob);
+  panel.querySelector(".recorder-panel").innerHTML = `
+    <span class="rp-status">試聽一下，滿意再儲存：</span>
+    <audio controls src="${url}"></audio>
+    <button class="mini-btn rp-save">💾 儲存</button>
+    <button class="mini-btn rp-retry">🔁 重錄</button>
+    <button class="mini-btn rp-close">✕ 取消</button>
+  `;
+  panel.querySelector(".rp-close").addEventListener("click", () => { URL.revokeObjectURL(url); closeActiveRecorder(); });
+  panel.querySelector(".rp-retry").addEventListener("click", () => {
+    URL.revokeObjectURL(url);
+    openRecorderFor(text, key, anchorLi);
+  });
+  panel.querySelector(".rp-save").addEventListener("click", async () => {
+    const statusEl = panel.querySelector(".rp-status");
+    statusEl.textContent = "上傳中…";
+    const res = await apiWrite("PUT", "/api/rec/" + key, blob, mimeType || "audio/webm");
+    if(res && res.ok){
+      recordedKeys.add(key);
+      statusEl.textContent = "✅ 已儲存！";
+      setTimeout(closeActiveRecorder, 900);
+      ["0-1","1-2","2-3"].forEach(ak => refreshAgePanel(ak));
+    }else if(res && res.status !== 401){
+      statusEl.textContent = "❌ 上傳失敗，請確認網路連線後再試一次。";
+    }else{
+      statusEl.textContent = "";
+    }
+  });
+}
+
+async function downloadBackup(){
+  const statusEl = document.getElementById("recordingStatus");
+  if(statusEl) statusEl.textContent = "準備備份中…";
+  const res = await apiWrite("GET", "/api/export");
+  if(!res || !res.ok){
+    if(statusEl) statusEl.textContent = (res && res.status !== 401) ? "❌ 備份失敗，請稍後再試。" : "";
+    return;
+  }
+  const data = await res.json();
+  const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "tiny-english-tree-recordings-backup.json";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+  if(statusEl) statusEl.textContent = "✅ 備份已下載。";
+}
+
+async function restoreBackup(file){
+  const statusEl = document.getElementById("recordingStatus");
+  if(statusEl) statusEl.textContent = "還原中…";
+  try{
+    const text = await file.text();
+    const data = JSON.parse(text);
+    const items = data.recordings || [];
+    let ok = 0;
+    for(const item of items){
+      const bytes = Uint8Array.from(atob(item.base64), c => c.charCodeAt(0));
+      const res = await apiWrite("PUT", "/api/rec/" + item.key, bytes, item.contentType || "application/octet-stream");
+      if(res && res.ok) ok++;
+      else break; // stop on first failure (e.g. wrong passcode) instead of repeatedly re-prompting
+    }
+    await loadRecordedKeys();
+    ["0-1","1-2","2-3"].forEach(ak => refreshAgePanel(ak));
+    if(statusEl) statusEl.textContent = `✅ 已還原 ${ok}/${items.length} 筆錄音。`;
+  }catch(e){
+    if(statusEl) statusEl.textContent = "❌ 備份檔案格式不正確。";
+  }
+}
+
+document.addEventListener("click", (e) => {
+  const rb = e.target.closest(".rec-btn");
+  if(rb){
+    const text = rb.dataset.recText;
+    const key = rb.dataset.recKey;
+    const li = rb.closest("li");
+    if(text && key && li) openRecorderFor(text, key, li);
+  }
+});
+
+function initRecordingUI(){
+  const toggle = document.getElementById("recordingModeToggle");
+  const savedMode = getItem("tet_recording_mode") === "1";
+  if(toggle){
+    toggle.checked = savedMode;
+    setRecordingMode(savedMode);
+    toggle.addEventListener("change", () => setRecordingMode(toggle.checked));
+  }
+  const dlBtn = document.getElementById("downloadBackupBtn");
+  if(dlBtn) dlBtn.addEventListener("click", downloadBackup);
+  const restoreBtn = document.getElementById("restoreBackupBtn");
+  const restoreFile = document.getElementById("restoreBackupFile");
+  if(restoreBtn && restoreFile){
+    restoreBtn.addEventListener("click", () => restoreFile.click());
+    restoreFile.addEventListener("change", () => {
+      if(restoreFile.files && restoreFile.files[0]) restoreBackup(restoreFile.files[0]);
+      restoreFile.value = "";
+    });
+  }
+  loadRecordedKeys().then(() => {
+    ["0-1","1-2","2-3"].forEach(ak => refreshAgePanel(ak));
+  });
+}
+
+function toggleNewScenarioRow(ageKey){
+  const sel = document.querySelector(`.target-select[data-age="${ageKey}"]`);
+  const row = document.querySelector(`.new-scenario-row[data-age="${ageKey}"]`);
+  if(sel && row) row.style.display = (sel.value === "__new__") ? "flex" : "none";
+}
+
+async function mymemoryTranslate(text, from, to){
+  const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${from}|${to}`;
+  const res = await fetch(url);
+  if(!res.ok) throw new Error("network");
+  const data = await res.json();
+  const out = data && data.responseData && data.responseData.translatedText;
+  if(!out) throw new Error("empty");
+  return out;
+}
+
+document.addEventListener("click", async (e) => {
+  // translate button
+  const tb = e.target.closest(".translate-btn");
+  if(tb){
+    const card = tb.closest(".custom-card");
+    const ageKey = card.dataset.age;
+    const enInput = card.querySelector(".custom-en");
+    const zhInput = card.querySelector(".custom-zh");
+    const status = document.getElementById("customStatus-" + ageKey);
+    const dir = tb.dataset.dir;
+    const srcInput = dir === "en2zh" ? enInput : zhInput;
+    const dstInput = dir === "en2zh" ? zhInput : enInput;
+    const srcText = srcInput.value.trim();
+    if(!srcText){
+      if(status){ status.textContent = "請先輸入文字再翻譯。"; status.className = "custom-status err"; }
+      return;
+    }
+    tb.disabled = true;
+    const originalLabel = tb.textContent;
+    tb.textContent = "翻譯中…";
+    if(status){ status.textContent = ""; status.className = "custom-status"; }
+    try{
+      const from = dir === "en2zh" ? "en" : "zh-TW";
+      const to = dir === "en2zh" ? "zh-TW" : "en";
+      const result = await mymemoryTranslate(srcText, from, to);
+      dstInput.value = result;
+      if(status){ status.textContent = "翻譯完成，記得檢查一下再存（機器翻譯僅供參考）。"; status.className = "custom-status ok"; }
+    }catch(err){
+      if(status){ status.textContent = "翻譯服務暫時無法使用（可能沒有網路，或翻譯次數用完了），請自行填寫。"; status.className = "custom-status err"; }
+    }finally{
+      tb.disabled = false;
+      tb.textContent = originalLabel;
+    }
+    return;
+  }
+
+  // add vocabulary — into an existing scenario, or create a brand new one
+  const ab = e.target.closest(".add-custom-btn");
+  if(ab){
+    const ageKey = ab.dataset.age;
+    const card = ab.closest(".custom-card");
+    const sel = card.querySelector(".target-select");
+    const enInput = card.querySelector(".custom-en");
+    const zhInput = card.querySelector(".custom-zh");
+    const status = document.getElementById("customStatus-" + ageKey);
+    const en = enInput.value.trim();
+    const zh = zhInput.value.trim();
+
+    if(!en && !zh){
+      if(status){ status.textContent = "請至少填一個欄位（英文或中文）。"; status.className = "custom-status err"; }
+      return;
+    }
+
+    const data = loadCustomData(ageKey);
+    let targetKey = sel.value;
+
+    if(targetKey === "__new__"){
+      const nameInput = card.querySelector(".new-scenario-name");
+      const iconInput = card.querySelector(".new-scenario-icon");
+      const name = nameInput.value.trim();
+      if(!name){
+        if(status){ status.textContent = "請幫新情境取個名稱（中英文都可以）。"; status.className = "custom-status err"; }
+        return;
+      }
+      targetKey = "c" + Date.now();
+      data.customLevels.push({
+        key: targetKey,
+        icon: iconInput.value.trim() || "📌",
+        name: name,
+        sub: "你自訂的情境",
+        items: [{en, zh}]
+      });
+      nameInput.value = "";
+      iconInput.value = "";
+    }else if(targetKey.startsWith("b")){
+      if(!data.extras[targetKey]) data.extras[targetKey] = [];
+      data.extras[targetKey].push({en, zh});
+    }else{
+      const cl = data.customLevels.find(c => c.key === targetKey);
+      if(cl) cl.items.push({en, zh});
+      else{
+        if(status){ status.textContent = "找不到這個情境，請重新選擇。"; status.className = "custom-status err"; }
+        return;
+      }
+    }
+
+    saveCustomData(ageKey, data);
+    enInput.value = "";
+    zhInput.value = "";
+    if(status){ status.textContent = HAS_STORAGE ? "已加入，會保存在這台裝置上。" : "已加入（目前環境不支援保存，重新整理會清空）。"; status.className = "custom-status ok"; }
+    refreshAgePanel(ageKey, targetKey, targetKey);
+    return;
+  }
+
+  // delete one word from a scenario (built-in extra, or a fully custom scenario's item)
+  const deb = e.target.closest(".del-extra-btn");
+  if(deb){
+    const ageKey = deb.dataset.age;
+    const levelKey = deb.dataset.level;
+    const idx = parseInt(deb.dataset.idx, 10);
+    const data = loadCustomData(ageKey);
+    if(levelKey.startsWith("b")){
+      if(data.extras[levelKey]) data.extras[levelKey].splice(idx, 1);
+    }else{
+      const cl = data.customLevels.find(c => c.key === levelKey);
+      if(cl) cl.items.splice(idx, 1);
+    }
+    saveCustomData(ageKey, data);
+    refreshAgePanel(ageKey);
+    return;
+  }
+
+  // delete an entire custom scenario
+  const dsb = e.target.closest(".del-scenario-btn");
+  if(dsb){
+    const ageKey = dsb.dataset.age;
+    const levelKey = dsb.dataset.level;
+    const data = loadCustomData(ageKey);
+    const cl = data.customLevels.find(c => c.key === levelKey);
+    const ok = confirm(`確定要刪除整個情境「${cl ? cl.name : ""}」嗎？裡面的詞彙也會一起刪除。`);
+    if(!ok) return;
+    data.customLevels = data.customLevels.filter(c => c.key !== levelKey);
+    saveCustomData(ageKey, data);
+    refreshAgePanel(ageKey);
+    return;
+  }
+});
+
+document.addEventListener("change", (e) => {
+  if(e.target.matches(".target-select")){
+    toggleNewScenarioRow(e.target.dataset.age);
+  }
+});
+
+function updateProgress(ageKey){
+  const data = AGE_DATA[ageKey];
+  const storeKey = "tet_checklist_" + ageKey;
+  let saved = {};
+  try{ saved = JSON.parse(getItem(storeKey) || "{}"); }catch(e){ saved = {}; }
+  const total = data.checklist.length;
+  const done = Object.values(saved).filter(Boolean).length;
+  const pct = total ? Math.round((done/total)*100) : 0;
+  const bar = document.getElementById("pbar-"+ageKey);
+  const txt = document.getElementById("ptext-"+ageKey);
+  if(bar) bar.style.width = pct + "%";
+  if(txt) txt.textContent = `${done} / ${total} 完成`;
+}
+
+document.addEventListener("change", (e) => {
+  if(e.target.matches('input[type="checkbox"][data-age]')){
+    const ageKey = e.target.dataset.age;
+    const idx = e.target.dataset.idx;
+    const storeKey = "tet_checklist_" + ageKey;
+    let saved = {};
+    try{ saved = JSON.parse(getItem(storeKey) || "{}"); }catch(err){ saved = {}; }
+    saved[idx] = e.target.checked;
+    setItem(storeKey, JSON.stringify(saved));
+    e.target.closest("li").classList.toggle("done", e.target.checked);
+    updateProgress(ageKey);
+  }
+});
+
+/* ---------------- Reading-together guidance ---------------- */
+function renderReadingPanel(){
+  const container = document.getElementById("readingPanels");
+  if(!container) return;
+  let html = "";
+  const openKeys = getPersistedOpenKeys("reading");
+  const actualOpenKeys = [];
+  const markOpen = (key, defaultOpen) => {
+    const isOpen = openKeys ? openKeys.includes(key) : defaultOpen;
+    if(isOpen) actualOpenKeys.push(key);
+    return isOpen;
+  };
+
+  ["0-1","1-2","2-3"].forEach((ageKey, ai) => {
+    const d = READING_DATA[ageKey];
+    const kPrinciples = "principles-" + ageKey;
+    const kTips = "tips-" + ageKey;
+    const kPhrases = "phrases-" + ageKey;
+    const kFaq = "faq-" + ageKey;
+    html += `<div class="age-subhead">
+      <h3>${d.title}</h3>
+      <p>${d.intro}</p>
+    </div>
+    <div class="grid2">
+      <details class="card" data-levelkey="${kPrinciples}"${markOpen(kPrinciples, ai === 0) ? " open" : ""}>
+        <summary>
+          <span class="badge">🧭</span>
+          <span class="s-title">核心原則</span>
+          <span class="chev">▾</span>
+        </summary>
+        <div class="level-body">
+          <ul class="principle-list">` +
+          d.principles.map(p => `<li><b>${p.t}</b>${p.d}</li>`).join("") +
+          `</ul>
+        </div>
+      </details>
+      <details class="card" data-levelkey="${kTips}"${markOpen(kTips, false) ? " open" : ""}>
+        <summary>
+          <span class="badge">💡</span>
+          <span class="s-title">實用技巧</span>
+          <span class="chev">▾</span>
+        </summary>
+        <div class="level-body">
+          <ul class="tip-list">` +
+          d.tips.map(t => `<li><b>${t.t}</b>${t.d}</li>`).join("") +
+          `</ul>
+        </div>
+      </details>
+    </div>`;
+
+    const phraseTexts = d.phrases.map(p => p[0]);
+    const playAllBtn = HAS_TTS ? `<button class="playall-btn" data-texts="${escAttr(JSON.stringify(phraseTexts))}">▶ 全部播放</button>` : "";
+    html += `<details class="card" data-levelkey="${kPhrases}"${markOpen(kPhrases, false) ? " open" : ""}>
+      <summary>
+        <span class="badge">🗣️</span>
+        <span class="s-title">共讀時可以用的引導句</span>
+        <span class="chev">▾</span>
+      </summary>
+      <div class="level-body">
+        <div class="card-head-row">${playAllBtn}</div>
+        <ul class="phrase-list">` +
+        d.phrases.map(p => `
+          <li>
+            <div class="txt"><div class="en">${p[0]}</div><div class="zh">${p[1]}</div></div>
+            ${HAS_TTS ? `<button class="speak-btn" data-speak="${escAttr(p[0])}" aria-label="播放發音" title="播放發音">🔊</button>` : ""}
+          </li>`).join("") +
+        `</ul>
+      </div>
+    </details>`;
+
+    html += `<details class="card" data-levelkey="${kFaq}"${markOpen(kFaq, false) ? " open" : ""}>
+      <summary>
+        <span class="badge">❓</span>
+        <span class="s-title">常見問題</span>
+        <span class="chev">▾</span>
+      </summary>
+      <div class="level-body">` +
+        d.faq.map(f => `
+          <div class="faq-item">
+            <div class="q"><b>Q</b>${f.q}</div>
+            <div class="a"><b>A</b>${f.a}</div>
+          </div>`).join("") +
+      `</div>
+    </details>`;
+  });
+
+  container.innerHTML = html;
+  savePersistedOpenKeys("reading", actualOpenKeys);
+}
+
+/* ---------------- Building an ESL environment at home ---------------- */
+function renderEslPanel(){
+  const container = document.getElementById("eslPanel");
+  if(!container) return;
+  const openKeys = getPersistedOpenKeys("esl");
+  const actualOpenKeys = [];
+  const markOpen = (key, defaultOpen) => {
+    const isOpen = openKeys ? openKeys.includes(key) : defaultOpen;
+    if(isOpen) actualOpenKeys.push(key);
+    return isOpen;
+  };
+
+  let html = `<div class="grid2">
+    <details class="card" data-levelkey="esl-principles"${markOpen("esl-principles", true) ? " open" : ""}>
+      <summary>
+        <span class="badge">🧭</span>
+        <span class="s-title">核心原則</span>
+        <span class="chev">▾</span>
+      </summary>
+      <div class="level-body">
+        <ul class="principle-list">` +
+        ESL_DATA.principles.map(p => `<li><b>${p.t}</b>${p.d}</li>`).join("") +
+        `</ul>
+      </div>
+    </details>
+    <details class="card" data-levelkey="esl-tactics"${markOpen("esl-tactics", true) ? " open" : ""}>
+      <summary>
+        <span class="badge">🛠️</span>
+        <span class="s-title">具體作法</span>
+        <span class="chev">▾</span>
+      </summary>
+      <div class="level-body">
+        <ul class="tip-list">` +
+        ESL_DATA.tactics.map(t => `<li><b>${t.icon} ${t.t}</b>${t.d}</li>`).join("") +
+        `</ul>
+      </div>
+    </details>
+  </div>`;
+
+  html += `<details class="card" data-levelkey="esl-faq"${markOpen("esl-faq", false) ? " open" : ""}>
+    <summary>
+      <span class="badge">❓</span>
+      <span class="s-title">常見問題</span>
+      <span class="chev">▾</span>
+    </summary>
+    <div class="level-body">` +
+      ESL_DATA.faq.map(f => `
+        <div class="faq-item">
+          <div class="q"><b>Q</b>${f.q}</div>
+          <div class="a"><b>A</b>${f.a}</div>
+        </div>`).join("") +
+    `</div>
+  </details>`;
+
+  html += `<div class="card">
+    <h3><span class="badge">🔗</span>延伸閱讀與資源</h3>
+    <ul class="link-list">` +
+    ESL_DATA.resources.map(r => `
+      <li>
+        <span class="resource-tag tag-${r.tag}">${RESOURCE_TAG_LABEL[r.tag]}</span><br>
+        <a href="${r.url}" target="_blank" rel="noopener">${r.name}<span class="ext">前往 ↗</span></a>
+        <div class="desc">${r.desc}</div>
+      </li>`).join("") +
+    `</ul>
+  </div>`;
+
+  container.innerHTML = html;
+  savePersistedOpenKeys("esl", actualOpenKeys);
+}
+
+function renderResourcesPage(){
+  const list = document.getElementById("allResourceLinks");
+  let html = "";
+  Object.values(AGE_DATA).forEach(data => {
+    data.resources.forEach(r => {
+      html += `<li>
+        <span class="resource-tag tag-${r.tag}">${RESOURCE_TAG_LABEL[r.tag]}</span><br>
+        <a href="${r.url}" target="_blank" rel="noopener">${r.name}<span class="ext">前往 ↗</span></a>
+        <div class="desc">${r.desc}</div>
+      </li>`;
+    });
+  });
+  ESL_DATA.resources.forEach(r => {
+    html += `<li>
+      <span class="resource-tag tag-${r.tag}">${RESOURCE_TAG_LABEL[r.tag]}</span><br>
+      <a href="${r.url}" target="_blank" rel="noopener">${r.name}<span class="ext">前往 ↗</span></a>
+      <div class="desc">${r.desc}</div>
+    </li>`;
+  });
+  list.innerHTML = html;
+}
+
+/* ---------------- Tab navigation ---------------- */
+function buildNav(){
+  const tabbar = document.getElementById("tabbar");
+  const dnav = document.getElementById("desktopNav");
+  TABS.forEach(t => {
+    const b1 = document.createElement("button");
+    b1.innerHTML = `<span class="ic">${t.icon}</span><span>${t.label}</span>`;
+    b1.dataset.tab = t.id;
+    b1.onclick = () => switchTab(t.id);
+    tabbar.appendChild(b1);
+
+    const b2 = document.createElement("button");
+    b2.textContent = t.icon + " " + t.label;
+    b2.dataset.tab = t.id;
+    b2.onclick = () => switchTab(t.id);
+    dnav.appendChild(b2);
+  });
+}
+
+function switchTab(id){
+  document.querySelectorAll(".age-panel").forEach(p => p.classList.remove("active"));
+  document.getElementById("panel-" + id).classList.add("active");
+  document.querySelectorAll("[data-tab]").forEach(b => b.classList.toggle("active", b.dataset.tab === id));
+  window.scrollTo({top:0, behavior:"instant"});
+  try{ setItem("tet_last_tab", id); }catch(e){}
+}
+
+/* ---------------- Audio settings UI ---------------- */
+function initAudioSettingsUI(){
+  const voiceSelect = document.getElementById("voiceSelect");
+  const rateRange = document.getElementById("rateRange");
+  const rateVal = document.getElementById("rateVal");
+  const testBtn = document.getElementById("testSpeakBtn");
+  const hint = document.getElementById("audioHint");
+
+  if(!HAS_TTS){
+    if(voiceSelect){ voiceSelect.innerHTML = "<option>此瀏覽器不支援語音播放</option>"; voiceSelect.disabled = true; }
+    if(rateRange) rateRange.disabled = true;
+    if(testBtn) testBtn.disabled = true;
+    if(hint) hint.textContent = "這個瀏覽器不支援語音朗讀功能，建議改用手機或電腦上的 Chrome / Safari 開啟本頁。";
+    return;
+  }
+
+  rateRange.value = currentRate;
+  rateVal.textContent = currentRate.toFixed(2) + "x";
+
+  populateVoiceList();
+  if(speechSynthesis.onvoiceschanged !== undefined){
+    speechSynthesis.onvoiceschanged = populateVoiceList;
+  }
+
+  voiceSelect.addEventListener("change", () => {
+    const v = ttsVoices.find(v => v.name === voiceSelect.value);
+    if(v){
+      currentVoice = v;
+      setItem("tet_tts_voice", v.name);
+      if(hint){
+        hint.textContent = britishScore(v) >= 80 ? `目前使用：${v.name}（英式發音）。` : `「${v.name}」不是明確標示英式的語音，發音可能偏美式或其他腔調，僅供參考。`;
+        hint.classList.toggle("warn", britishScore(v) < 80);
+      }
+    }
+  });
+
+  rateRange.addEventListener("input", () => {
+    currentRate = parseFloat(rateRange.value);
+    rateVal.textContent = currentRate.toFixed(2) + "x";
+    setItem("tet_tts_rate", String(currentRate));
+  });
+
+  testBtn.addEventListener("click", () => {
+    testBtn.disabled = true;
+    speak("Good morning! Let's read a book together.", () => { testBtn.disabled = false; });
+  });
+}
+
+/* ---------------- Init ---------------- */
+buildNav();
+["0-1","1-2","2-3"].forEach(k => renderAgePanel(k));
+renderReadingPanel();
+renderEslPanel();
+renderResourcesPage();
+initAudioSettingsUI();
+initRecordingUI();
+const lastTab = getItem("tet_last_tab") || "home";
+switchTab(TABS.some(t=>t.id===lastTab) ? lastTab : "home");
+
+if("serviceWorker" in navigator){
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js").catch(() => {});
+  });
+}
+</script>
+</body>
+</html>
