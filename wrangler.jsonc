@@ -1,0 +1,28 @@
+{
+  // Config for deploying this app as a Cloudflare Workers site (static assets + a small
+  // API for family voice recordings) via the Wrangler CLI (npx wrangler deploy).
+  "name": "english",
+  "compatibility_date": "2024-09-23",
+  "main": "worker.js",
+  "assets": {
+    // Serve everything in this folder (index.html, manifest.json, sw.js, icons/) as static files.
+    // NOTE: this assumes wrangler.jsonc sits in the SAME folder as index.html (as it does in this
+    // pwa/ zip). In your live repo (github.com/ask0921-arch/english) the site files live inside a
+    // "public" subfolder next to wrangler.jsonc — there, this should be "./public" instead of "./",
+    // otherwise everything gets served one path level too deep (e.g. /public/index.html instead of /).
+    "directory": "./",
+    // Any unmatched path falls back to index.html — safe here since the whole app
+    // is a single page with client-side tab switching, not real multi-page routes.
+    "not_found_handling": "single-page-application",
+    // Binding name worker.js uses to serve static files for any non-/api/ request: env.ASSETS.fetch(request)
+    "binding": "ASSETS"
+  },
+  "r2_buckets": [
+    // Stores family voice recordings, one object per phrase (keyed by a hash of its English text).
+    { "binding": "RECORDINGS", "bucket_name": "tiny-english-tree-recordings" }
+  ]
+  // One more manual step (not stored in this file): set the shared family passcode used to
+  // protect uploads/deletes/backups, by running this once from the same folder as wrangler.jsonc:
+  //   npx wrangler secret put FAMILY_PASSCODE
+  // (it will prompt you to type the passcode — enter 0909)
+}
