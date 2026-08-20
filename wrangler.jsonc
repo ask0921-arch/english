@@ -6,7 +6,7 @@
   "compatibility_date": "2024-09-23",
   "assets": {
     // Serve everything in this folder (index.html, manifest.json, sw.js, icons/) as static files.
-    "directory": "./",
+    "directory": "./public",
     // Any unmatched path falls back to index.html — safe here since the whole app
     // is a single page with client-side tab switching, not real multi-page routes.
     "not_found_handling": "single-page-application"
