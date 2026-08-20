@@ -10,7 +10,7 @@
     // pwa/ zip). In your live repo (github.com/ask0921-arch/english) the site files live inside a
     // "public" subfolder next to wrangler.jsonc — there, this should be "./public" instead of "./",
     // otherwise everything gets served one path level too deep (e.g. /public/index.html instead of /).
-    "directory": "./",
+    "directory": "./public",
     // Any unmatched path falls back to index.html — safe here since the whole app
     // is a single page with client-side tab switching, not real multi-page routes.
     "not_found_handling": "single-page-application",
